@@ -154,13 +154,11 @@ public class mainFrmServer extends javax.swing.JFrame {
                     while(true){
                         List<ClientInfo> list = server.getList().getList();
                         jTextArea2.setText("");
-                        for(ClientInfo i: list){
-                            if(i!=null){
-                                jTextArea2.append(i.getHost()+ ":" + i.getPort() 
-                                              + " (status : " + (i.isStatus() ? "busy":"free") + " )"
-                                              + "\tnomic: " + i.getNomic()
-                                              + "\tnospeak: " + i.getNospeak() + "\n");
-                            }
+                        for(int i = 0; i < list.size(); i++){
+                                jTextArea2.append(list.get(i).getHost()+ ":" + list.get(i).getPort() 
+                                              + " (status : " + (list.get(i).isStatus() ? "busy":"free") + " )"
+                                              + "\tnomic: " + list.get(i).getNomic()
+                                              + "\tnospeak: " + list.get(i).getNospeak() + "\n");
                         }
                         try {
                             Thread.sleep(1000);

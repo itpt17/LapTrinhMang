@@ -8,6 +8,8 @@ public class comingFrm extends javax.swing.JFrame {
     private ClientInfo targetinfo;
     private Connect con;
     boolean accept = false;
+    private int micidx;
+    private int spkidx;
     public comingFrm() {
         initComponents();
     }
@@ -41,6 +43,22 @@ public class comingFrm extends javax.swing.JFrame {
         this.con = con;
     }
 
+    public int getMicidx() {
+        return micidx;
+    }
+
+    public void setMicidx(int micidx) {
+        this.micidx = micidx;
+    }
+
+    public int getSpkidx() {
+        return spkidx;
+    }
+
+    public void setSpkidx(int spkidx) {
+        this.spkidx = spkidx;
+    }
+    
    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -127,7 +145,7 @@ public class comingFrm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        System.exit(0);
+        setVisible(false);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -145,6 +163,9 @@ public class comingFrm extends javax.swing.JFrame {
         call.setCon(con);
         call.setTargetinfo(targetinfo);
         call.setSourceinfo(sourceinfo);
+        call.setMicIdx(micidx);
+        call.setSpkIdx(spkidx);
+        call.setIsAlive(true);
         call.acceptCall();
         call.setVisible(true);
         setVisible(false);

@@ -8,9 +8,9 @@ import java.util.logging.Logger;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
+import javax.sound.sampled.Line;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.Mixer;
-import javax.sound.sampled.Port;
 import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.TargetDataLine;
 
@@ -27,7 +27,7 @@ public class Audio {
     private DataLine.Info outputInfo;
 
     public Audio() {
-        float sampleRate = 8000.0F;
+        float sampleRate = 44100;
         int sampleSizeInBits = 16;
         int channels = 2;
         boolean signed = true;
@@ -90,10 +90,9 @@ public class Audio {
          List<Device> list = new ArrayList<>();
          for(int i = 0; i < mixerInfo.length; i++){
              Mixer tmp = AudioSystem.getMixer(mixerInfo[i]);
-             if(tmp.isLineSupported(outputInfo))
-             {
-                 list.add(new Device(mixerInfo[i].getName(), i));
-             }
+             if(tmp.isLineSupported(outputInfo)){
+                list.add(new Device(mixerInfo[i].getName(), i));
+            }
          }
          return list;
      }

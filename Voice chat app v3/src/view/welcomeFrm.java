@@ -8,7 +8,7 @@ import model.Params;
 public class welcomeFrm extends javax.swing.JFrame {
     private Icon icon;
     private Icon icon2;
-    Thread CheckInfo;
+    private Thread CheckInfo;
     private Params params;
     mainFrm mainFrm;
     public welcomeFrm() {
@@ -78,7 +78,14 @@ public class welcomeFrm extends javax.swing.JFrame {
         CheckInfo.start();
     }
 
- 
+    public Thread getCheckInfo() {
+        return CheckInfo;
+    }
+
+    public void setCheckInfo(Thread CheckInfo) {
+        this.CheckInfo = CheckInfo;
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {

@@ -13,19 +13,11 @@ public class ListUserThread extends Thread {
     }
     @Override
     public void run(){
-        int cnt = 0;
         synchronized(connect){
         while(true){
                 if(stop == true) {
-                    try {
-                    connect.notifyAll();
-                    connect.wait();
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(ListUserThread.class.getName()).log(Level.SEVERE, null, ex);
-                    }
                 }else{
                     list = (ListUser) connect.rcvListUser();
-                    cnt++;
                     if(list.getList().size() > 0 && list.getList().get(list.getList().size()-1) == null){
                         stop = true;
                     }

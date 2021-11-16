@@ -9,16 +9,19 @@ import model.Audio;
 import model.ClientInfo;
 
 public class callFrm extends javax.swing.JFrame {
-
     private ClientInfo sourceinfo;
     private ClientInfo targetinfo;
     private Connect con;
     private Audio audio;
     boolean accept = false;
-
+    private int micIdx;
+    private int spkIdx;
+    private boolean isAlive;
+    PlayThread play;
     public callFrm() {
         initComponents();
         audio = new Audio();
+        isAlive = false;
     }
 
     public void TryConnect() {
@@ -93,7 +96,27 @@ public class callFrm extends javax.swing.JFrame {
         jLabel2.setText("Calling");
         jLabel2.setForeground(Color.GREEN);
         System.out.println("accept");
-        new PlayThread(audio, con, 5, 3).Start();
+        System.out.println(micIdx + " " + spkIdx);
+        play = new PlayThread(audio, con, micIdx, spkIdx);
+        play.Start();
+        new Thread(){
+            @Override
+            public void run(){
+                while(true){
+                    if(play.isStopRec())
+                    {
+                        isAlive = false;
+                        setVisible(false);
+                        break;
+                    }
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(callFrm.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }.start();
     }
 
     public ClientInfo getSourceinfo() {
@@ -128,6 +151,30 @@ public class callFrm extends javax.swing.JFrame {
         this.con = con;
     }
 
+    public int getMicIdx() {
+        return micIdx;
+    }
+
+    public void setMicIdx(int micIdx) {
+        this.micIdx = micIdx;
+    }
+
+    public int getSpkIdx() {
+        return spkIdx;
+    }
+
+    public void setSpkIdx(int spkIdx) {
+        this.spkIdx = spkIdx;
+    }
+
+    public boolean isIsAlive() {
+        return isAlive;
+    }
+
+    public void setIsAlive(boolean isAlive) {
+        this.isAlive = isAlive;
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -199,7 +246,9 @@ public class callFrm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        System.exit(0);
+        isAlive = false;
+        play.setStopPlay(true);
+        this.setVisible(false);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     public static void main(String args[]) {

@@ -55,6 +55,8 @@ public class mainFrm extends javax.swing.JFrame {
                             Logger.getLogger(mainFrm.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
+                    InputIndx = listInp.get(jComboBox1.getSelectedIndex()).getIndex();
+                    OutputIndx= listOup.get(jComboBox2.getSelectedIndex()).getIndex();
                 }
             }
         }.start();
@@ -99,9 +101,12 @@ public class mainFrm extends javax.swing.JFrame {
                                     ClientInfo info = con.rcvClientInfo();
                                     System.out.println(info.getName());
                                     comingFrm call = new comingFrm();
+                                    call.setMicidx(InputIndx);
+                                    call.setSpkidx(OutputIndx);
                                     call.setCon(con);
                                     call.setSourceinfo(new ClientInfo(params.getName(),con.getSocket().toString(),listInp.size(), listOup.size()
                                                                       ,con.getSocket().getLocalAddress().toString(),con.getSocket().getLocalPort()));
+                                    
                                     call.setTargetinfo(info);
                                     call.setCallInfo("Comming call...");
                                     call.setVisible(true);
@@ -329,17 +334,37 @@ public class mainFrm extends javax.swing.JFrame {
         int index = jList1.getSelectedIndex();
         this.setStop(true);
         listUserThread.setStop(true);
+        callFrm call = new callFrm();
         if(index != -1){
             ClientInfo info = listUserThread.getList().getList().get(index);
             Socket socket   = con.getSocket();
-            callFrm call = new callFrm();
             call.setSourceinfo(new ClientInfo(params.getName(),con.getSocket().toString(),listInp.size(), listOup.size()
                                ,con.getSocket().getLocalAddress().toString(),con.getSocket().getLocalPort()));
             call.setTargetinfo(info);
             call.setCon(con);
+            call.setMicIdx(InputIndx);
+            call.setSpkIdx(OutputIndx);
             call.setVisible(true);
+            call.setIsAlive(true);
             call.TryConnect();
         }
+        new Thread(){
+            @Override
+            public void run(){
+                synchronized(con){
+                    while(true){
+                        System.out.println(call.isIsAlive() + " " + stop + " " + listUserThread.isStop());
+                        if(!call.isIsAlive() && stop && listUserThread.isStop()){
+                            System.out.println("run here");
+                            stop = false;
+                            listUserThread.setStop(false);
+                            con.notifyAll();
+                            System.out.println("Notify All");
+                        }
+                    }
+                }
+            }
+        }.start();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     public static void main(String args[]) {

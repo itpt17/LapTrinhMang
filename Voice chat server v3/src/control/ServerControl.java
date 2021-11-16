@@ -277,7 +277,8 @@ class ListenClientStatus extends Thread{
 class CallingThread extends Thread{
     Connect con1;
     Connect con2;
-
+    boolean stop = false;
+    
     public CallingThread(Connect con1, Connect con2) {
         this.con1 = con1;
         this.con2 = con2;
@@ -301,13 +302,21 @@ class CallingThread extends Thread{
 
     @Override
     public void run(){
-        synchronized(con1){
-            while(true){
-                {
-                    byte[] buffer = con1.rsvBytes();
-                    con2.sendBytes(buffer);
-                    con1.notify();
+        int cnt = 0;
+        while(!stop){
+            {
+                byte[] buffer = con1.rsvBytes();
+                boolean check = false;
+                for(int i = 0; i < buffer.length; i++){
+                    if(buffer[i] != 0) check = true;
                 }
+                if(!check) cnt++;
+                if(cnt >= 20)
+                {
+                    stop = true;
+                    System.out.println("server stop");
+                }
+                con2.sendBytes(buffer);
             }
         }
     }
